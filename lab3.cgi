@@ -5,15 +5,17 @@ use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 
 use lab3::st01::st01;
-
+use lab3::st08::st08;
 my @MODULES = 
 (
-	\&ST01::st01,
+	\&ST01::st01, 
+	\&ST08::st08,
 );
 
 my @NAMES = 
 (
 	"Student 01",
+	"08 Kuznetsova",
 );
 
 Lab2Main();
