@@ -6,7 +6,7 @@ use DBI;
 my $n = new CGI;
 my $student;
 my $selfurl = "lab3.cgi";
-my    $dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
+my $dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
 
 
 
@@ -65,7 +65,7 @@ sub ShowList
 </tr>
 STARTLIST
 
-	my $sth = $dbh->prepare("select * from list");
+	my $sth = $dbh->prepare("select * from studlist");
 	$sth->execute();
 
 	while(my $item = $sth->fetchrow_hashref)
@@ -146,7 +146,7 @@ ENDOFITEM
 
 sub DoEdit
 {
-	my $id =$dbh->prepare("select count(*) from list");
+	my $id =$dbh->prepare("select count(*) from studlist");
 	$id->execute();
 	$id++;
 	my $Prpost = 0 + $n->param('Prpost');
@@ -155,27 +155,27 @@ sub DoEdit
 	my $Surname = $dbh->quote($n->param('Surname'));
 	my $Name = $dbh -> quote ($n->param('Name'));
 		
-	$dbh->do("replace into list values($id, $Surname, $Name, $Age, $Prpost)");
+	$dbh->do("replace into studlist values($id, $Surname, $Name, $Age, $Prpost)");
 }
 
 sub DoDelete
 {
 	my $id = 0+$n->param('id');
-	$dbh -> do ("delete from list where id = $id");
+	$dbh -> do ("delete from studlist where id = $id");
 }
 
 sub Edit
 {
 	my $id = 0+$n->param('id');
 	ShowForm(GetItem(0+$n->param('id')));
-	$dbh->do("delete from list where id=$id");
+	$dbh->do("delete from studlist where id=$id");
 	
 }
 
 sub GetItem 
 {
 	my ($id) = @_;
-	my $sth = $dbh->prepare("select * from list where id=$id");
+	my $sth = $dbh->prepare("select * from studlist where id=$id");
 	$sth->execute();
 
 	if(my $item = $sth->fetchrow_hashref)
