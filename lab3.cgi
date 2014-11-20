@@ -7,11 +7,13 @@ use CGI::Carp qw(fatalsToBrowser);
 use lab3::st01::st01;
 use lab3::st05::st05;
 use lab3::st08::st08;
+use lab3::st14::st14;
 my @MODULES = 
 (
 	\&ST01::st01, 
 	\&ST05::st05,
 	\&ST08::st08,
+	\&ST14::st14,
 );
 
 my @NAMES = 
@@ -19,6 +21,7 @@ my @NAMES =
 	"Student 01",
 	"05. Girgushkina",
 	"08 Kuznetsova",
+	"14 Melnikov",
 );
 
 Lab2Main();
