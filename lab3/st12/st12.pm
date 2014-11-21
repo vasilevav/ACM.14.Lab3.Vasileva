@@ -122,6 +122,7 @@ sub edit {
 	foreach my $el(@ElNames) {
 		if($el eq $ElNames[-1]){
 			if ($DATABASE[$elnum-1]->{$el}==1) {print "ÑÓÏÅÐÄÎÑÊÀ <INPUT Type=checkbox Name=\"$addtnlPrm\" Value=1 Checked>";}
+			else {if (!$elnum) {print "ÑÓÏÅÐÄÎÑÊÀ <INPUT Type=checkbox Name=\"$addtnlPrm\" Value=1 unchecked>";}}
 		}else{
 			if($elnum){print "<INPUT TYPE=Text NAME=\"$el\" value=\"$DATABASE[$elnum-1]->{$el}\"><br>";}
 			else {print "<INPUT TYPE=Text NAME =\"$el\" value=\"$el\"><br>";}}
