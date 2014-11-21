@@ -1,4 +1,4 @@
-#!c:/perl64/bin/perl
+#!/usr/bin/perl
 
 use strict;
 use CGI;
@@ -9,6 +9,7 @@ use lab3::st05::st05;
 use lab3::st08::st08;
 use lab3::st12::st12;
 use lab3::st14::st14;
+use lab3::st21::st21;
 my @MODULES = 
 (
 	\&ST01::st01, 
@@ -16,6 +17,7 @@ my @MODULES =
 	\&ST08::st08,
 	\&ST12::st12,
 	\&ST14::st14,
+	\&ST21::st21,
 );
 
 my @NAMES = 
@@ -25,6 +27,7 @@ my @NAMES =
 	"08 Kuznetsova",
 	"Kushnikov V.",  #12
 	"14 Melnikov",
+	"21 Shilenkov",
 );
 
 Lab2Main();
