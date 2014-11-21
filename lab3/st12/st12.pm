@@ -16,7 +16,8 @@ my @ElNames=(
 	'Ширина',
 	'Система_закладных',
 	'Форма',
-	'Сердечник');
+	'Сердечник',
+	'Супердоска');
 my $addtnlPrm = 'Супердоска';
 	
 sub st12{Lab2Main();}
@@ -43,7 +44,7 @@ sub IntoDB{
 	$dbh->do('SET CHARACTER SET cp1251');
 	$dbh->do('TRUNCATE TABLE myitems');
 	my $names = join(',',@ElNames);
-	my $sth = $dbh->prepare("INSERT INTO myitems(ID, $names, $addtnlPrm) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	my $sth = $dbh->prepare("INSERT INTO myitems(ID, $names) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 	my $id = 1;
 	foreach my $item(@DATABASE){	
 		$sth->bind_param(1,$id++);
@@ -51,9 +52,6 @@ sub IntoDB{
 		foreach my $itemName(@ElNames){
 			$sth->bind_param($i++,$item->{$itemName});
 		}
-		if(defined($item->{$addtnlPrm}))
-		{$sth->bind_param($i++,$item->{$addtnlPrm});}
-		else{$sth->bind_param($i++,0);}
 		$sth->execute();
 	}	
 	$dbh ->disconnect();
@@ -69,14 +67,8 @@ sub FromDB{
 	$sth->execute();
 	@DATABASE=();
 	while(my $ref2hash = $sth->fetchrow_hashref()){
-		my $hsh = {};
-		foreach my $itemName(@ElNames){
-			$hsh->{$itemName}=$ref2hash->{$itemName};
-		}
-		if($ref2hash->{$addtnlPrm} == 1){
-			$hsh->{$addtnlPrm} = 1;
-		}
-		@DATABASE=(@DATABASE, $hsh);
+		delete($ref2hash->{ID});
+		@DATABASE=(@DATABASE, $ref2hash);
 	}
 	$sth->finish();
 	$dbh ->disconnect();
@@ -104,9 +96,6 @@ sub save{
 	foreach my $o(@ElNames){
 		$elem->{$o}=$q->param($o);
 	}
-	if(defined($q->param($addtnlPrm))){
-		$elem->{$addtnlPrm}=1;
-	}
 	if(!$elnum){
 		@DATABASE=(@DATABASE, $elem);
 	}else{$DATABASE[$elnum-1]=$elem;}
@@ -131,12 +120,11 @@ sub edit {
 	print "<pre><FORM><INPUT TYPE=hidden NAME=ElN value=$elnum><INPUT TYPE=hidden NAME=student value=$global->{st}>";
 	my $str ="";
 	foreach my $el(@ElNames) {
-		if($elnum){print "<INPUT TYPE=Text NAME=\"$el\" value=\"$DATABASE[$elnum-1]->{$el}\"><br>";}
-		else {print "<INPUT TYPE=Text NAME =\"$el\" value=\"$el\"><br>";}
+		if($el eq $ElNames[-1]){
+			if ($DATABASE[$elnum-1]->{$el}==1) {print "СУПЕРДОСКА <INPUT Type=checkbox Name=\"$addtnlPrm\" Value=1 Checked>";}
+		}else{
+			if($elnum){print "<INPUT TYPE=Text NAME=\"$el\" value=\"$DATABASE[$elnum-1]->{$el}\"><br>";}
+			else {print "<INPUT TYPE=Text NAME =\"$el\" value=\"$el\"><br>";}}
 	}
-	if(defined($DATABASE[$elnum-1]->{$addtnlPrm})&&$elnum){
-	print "СУПЕРДОСКА <INPUT Type=checkbox Name=\"$addtnlPrm\" Value=1 Checked>";
-	}
-	if(!$elnum){print "СУПЕРДОСКА <INPUT Type=checkbox Name=\"$addtnlPrm\" Value=1 unchecked>";}
 	print"</pre><button type=submit name=wtd value=3>Сохранить</button></FORM>";	
 }
