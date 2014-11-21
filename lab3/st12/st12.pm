@@ -116,8 +116,8 @@ sub edit {
 	my ($q, $global) = @_;
 	FromDB();
 	my $elnum = $q->param('ElN');
-	print $q->header('charset=windows-1251');
-	print "<pre><FORM><INPUT TYPE=hidden NAME=ElN value=$elnum><INPUT TYPE=hidden NAME=student value=$global->{st}>";
+	print $q->header('charset=windows-1251','content-type=text/html');
+	print "<pre><FORM ACTION=$global->{selfurl} METHOD=POST><INPUT TYPE=hidden NAME=ElN value=$elnum><INPUT TYPE=hidden NAME=student value=$global->{st}>";
 	my $str ="";
 	foreach my $el(@ElNames) {
 		if($el eq $ElNames[-1]){
