@@ -6,7 +6,8 @@ use DBI;
 my $n = new CGI;
 my $student;
 my $selfurl = "lab3.cgi";
-my $dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
+#my $dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
+my $dbh; ##############!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
@@ -34,7 +35,7 @@ sub st05
 	
 
 }
-$dbh -> disconnect();
+###################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$dbh -> disconnect();
 sub ShowHeader
 {
 	print <<ENDOFHTML;
@@ -195,3 +196,6 @@ sub ShowFooter
 </html>
 ENDOFHTML
 }
+
+
+return 1;
