@@ -6,8 +6,7 @@ use DBI;
 my $n = new CGI;
 my $student;
 my $selfurl = "lab3.cgi";
-#my $dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
-my $dbh; ##############!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+my $dbh; 
 
 
 
@@ -49,6 +48,7 @@ ENDOFHTML
 
 sub ShowList
 {
+	$dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
 	ShowForm() unless ($n->param('type') eq 'edit');
 
 	print <<STARTLIST;
@@ -77,6 +77,7 @@ STARTLIST
 	$sth->finish();
 	
 	print '</table>';
+	$dbh -> disconnect();
 }
 
 sub ShowForm
@@ -147,6 +148,7 @@ ENDOFITEM
 
 sub DoEdit
 {
+	$dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
 	my $id =$dbh->prepare("select count(*) from studlist");
 	$id->execute();
 	$id++;
@@ -157,19 +159,24 @@ sub DoEdit
 	my $Name = $dbh -> quote ($n->param('Name'));
 		
 	$dbh->do("replace into studlist values($id, $Surname, $Name, $Age, $Prpost)");
+	$dbh -> disconnect();
 }
 
 sub DoDelete
 {
+	$dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
 	my $id = 0+$n->param('id');
 	$dbh -> do ("delete from studlist where id = $id");
+	$dbh -> disconnect();
 }
 
 sub Edit
 {
+	$dbh  =   DBI->connect("DBI:mysql:db;localhost:3306", "root", "1234", {RaiseError=>1, AutoCommit=>1});
 	my $id = 0+$n->param('id');
 	ShowForm(GetItem(0+$n->param('id')));
 	$dbh->do("delete from studlist where id=$id");
+	$dbh -> disconnect();
 	
 }
 
