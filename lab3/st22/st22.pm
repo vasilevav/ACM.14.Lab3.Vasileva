@@ -1,7 +1,5 @@
-
 package ST22;
 use DBI;
-use Data::Dumper;
 use strict;
 use Encode 'from_to';
 
@@ -10,17 +8,19 @@ my $selfurl;
 my $stNum;
 my %myRoomItems;
 
+
+
 sub st22
 {
 	my ($q, $global) = @_;
 	my $cgiAPI = new CGI;
 	$stNum = $global->{student};
 	$selfurl = $global->{selfurl};
+
 	my $isappVS = $cgiAPI->param("isapp");
-	if ($isappVS ==1) {
+	if ((defined $isappVS) && ($isappVS==1)) {
 		print "Content-type: text/html\n\n";
 		mainFunc($cgiAPI);
-		return 1;
 	} 
 	else {
 		print "Content-type: text/html\n\n";
@@ -58,15 +58,11 @@ sub st22
 				    <a href="$global->{selfurl}">Back</a><BR>
 				    </footer>
 				</HTML>~;
-		return 1;
-	}
-	
-
-	
+	};
 	
 };
 
-1;
+
 
 sub mainFunc
 {
@@ -77,14 +73,10 @@ sub mainFunc
 				\&loadFromFile, \&saveToDB, \&loadFromDB, \&addItemForm, \&updItemForm, \&delItemForm);
 
 	if(defined $action) {
-		#loadFromFile();
-
 		$dbh = DBI->connect('DBI:mysql:mydb:localhost:3306', 'root', '', { RaiseError => 1, AutoCommit => 1});
 		loadFromDB();
 		$arr[$action]->($params);
-
 		$dbh->disconnect();
-		#saveToFile();
 	};
 
 
@@ -270,4 +262,4 @@ sub loadFromDB
 
 };
 
-
+1;
