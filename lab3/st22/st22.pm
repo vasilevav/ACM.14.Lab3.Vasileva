@@ -1,5 +1,7 @@
+
 package ST22;
 use DBI;
+use Data::Dumper;
 use strict;
 use Encode 'from_to';
 
@@ -8,19 +10,17 @@ my $selfurl;
 my $stNum;
 my %myRoomItems;
 
-
-
 sub st22
 {
 	my ($q, $global) = @_;
 	my $cgiAPI = new CGI;
 	$stNum = $global->{student};
 	$selfurl = $global->{selfurl};
-
 	my $isappVS = $cgiAPI->param("isapp");
-	if ((defined $isappVS) && ($isappVS==1)) {
-		print "Content-type: text/html\n\n";
+	if ($isappVS ==1) {
+		#print "Content-type: text/html\n\n";
 		mainFunc($cgiAPI);
+		return 1;
 	} 
 	else {
 		print "Content-type: text/html\n\n";
@@ -42,11 +42,8 @@ sub st22
 						 <hr>
 					    <BR>
 					    ~;
+
 		mainFunc($cgiAPI);
-		#while((my $name,my $item) = each %ENV)
-		#{
-		#	print $name." = ".$item."; <BR>"
-		#};
 
 		 
 		print qq~
@@ -58,11 +55,15 @@ sub st22
 				    <a href="$global->{selfurl}">Back</a><BR>
 				    </footer>
 				</HTML>~;
-	};
+		return 1;
+	}
+	
+
+	
 	
 };
 
-
+1;
 
 sub mainFunc
 {
@@ -73,10 +74,14 @@ sub mainFunc
 				\&loadFromFile, \&saveToDB, \&loadFromDB, \&addItemForm, \&updItemForm, \&delItemForm);
 
 	if(defined $action) {
+		#loadFromFile();
+
 		$dbh = DBI->connect('DBI:mysql:mydb:localhost:3306', 'root', '', { RaiseError => 1, AutoCommit => 1});
 		loadFromDB();
 		$arr[$action]->($params);
+
 		$dbh->disconnect();
+		#saveToFile();
 	};
 
 
@@ -91,6 +96,8 @@ sub addItemForm
 			    <input type=text width = 40 name = "colorEl"> <BR>
 			    Element description:<BR>
 			    <Textarea name = "descriptionEl" rows = 12 cols = 50 ></Textarea><BR>
+			    Some bool indicator: 
+			    <input type=checkbox name = "SBoolInd" value = 0 ><BR>
 			    <INPUT TYPE="HIDDEN" NAME="action" VALUE ="1"/>
 			    <INPUT TYPE="HIDDEN" NAME="student" VALUE =$stNum/>
 			    <input type = submit name = "btn" value = "Save"/><BR>
@@ -106,6 +113,8 @@ sub updItemForm
 		    <input type=text width = 40 name = "colorEl"> <BR>
 		    Element description:<BR>
 		    <Textarea name = "descriptionEl" rows = 12 cols = 50 ></Textarea><BR>
+		    Some bool indicator: 
+		    <input type=checkbox name = "SBoolInd" value = 0 ><BR>
 	    	<INPUT TYPE="HIDDEN" NAME=action VALUE ="2">
 	    	<INPUT TYPE="HIDDEN" NAME="student" VALUE =$stNum/>
 		    <input type = submit name = btn  value = "Save changes"/><BR>
@@ -131,9 +140,13 @@ sub addItem
 	my $name = $params->param("nameEl");
 	my $color = $params->param("colorEl");
 	my $details = $params->param("descriptionEl");
-
- 	my @paramArr = ( $name,$color, $details);
-	$dbh->do("insert into mydb.myitems (name, color, description) values (?,?,?)", undef,@paramArr);
+	my $SBoolInd = $params->param("SBoolInd");
+	if (defined $params->param("SBoolInd") )
+	{
+		$SBoolInd = "true";
+	};
+ 	my @paramArr = ( $name,$color, $details,$SBoolInd);
+	$dbh->do("insert into mydb.myitems (name, color, description,someboolindicator) values (?,?,?,?)", undef,@paramArr);
 };
 
 
@@ -153,9 +166,13 @@ sub updateItem
 	my $name = $params->param("nameEl");
 	my $color = $params->param("colorEl");
 	my $details = $params->param("descriptionEl");
-
-	my @paramArr = ($color, $details, $name);
-	$dbh->do("update mydb.myitems set color = ?, description = ? where name=?", undef,@paramArr);
+	my $SBoolInd = $params->param("SBoolInd");
+	if (defined $params->param("SBoolInd") )
+	{
+		$SBoolInd = 1;
+	};
+ 	my @paramArr = ( $color, $details,$SBoolInd, $name);
+	$dbh->do("update mydb.myitems set color = ?, description = ?, someboolindicator = ? where name=?", undef,@paramArr);
 };
 
 
@@ -170,12 +187,13 @@ sub showAllItems
 		{
 			from_to($name,'cp866','windows-1251');
 			$resStr .= $name;
-			while((my $itemKey,my $itemInfo) = each %{$myRoomItems{$name}})
+			#while((my $itemKey,my $itemInfo) = each %{$myRoomItems{$name}})
+			foreach my $itemKey(sort keys %{$myRoomItems{$name}})
 			{
 				#print "Item info: ".$itemKey." ".$itemInfo."<BR>";
 				from_to($itemKey,'cp866','windows-1251');
-				from_to($itemInfo,'cp866','windows-1251');
-				$resStr .= "_".$itemInfo;
+				from_to(${$myRoomItems{$name}}{$itemKey},'cp866','windows-1251');
+				$resStr .= "_".${$myRoomItems{$name}}{$itemKey};
 			};
 			$resStr .= ";";
 		};
@@ -186,13 +204,16 @@ sub showAllItems
 		while((my $name,my $item) = each %myRoomItems)
 		{
 			from_to($name,'cp866','windows-1251');
-			$resStr .= "<li>"."Name of element: " .$name."; ";
-			while((my $itemKey,my $itemInfo) = each %{$myRoomItems{$name}})
+			$resStr .= "<li>"."<B>"."Name of element: " ."</B>".$name."; ";
+			#while((my $itemKey,my $itemInfo) = each %{$myRoomItems{$name}})
+			foreach my $itemKey(sort keys %{$myRoomItems{$name}})
 			{
 				#print "Item info: ".$itemKey." ".$itemInfo."<BR>";
+				#from_to($itemKey,'cp866','windows-1251');
+				#from_to($itemInfo,'cp866','windows-1251');
 				from_to($itemKey,'cp866','windows-1251');
-				from_to($itemInfo,'cp866','windows-1251');
-				$resStr .=$itemKey." of element: ".$itemInfo."; "
+				from_to(${$myRoomItems{$name}}{$itemKey},'cp866','windows-1251');
+				$resStr .="<B>".$itemKey." of element: "."</B>".${$myRoomItems{$name}}{$itemKey}."; "
 			};
 			$resStr .= "</li>";
 		};
@@ -249,17 +270,18 @@ sub saveToDB
 sub loadFromDB
 {
 	%myRoomItems = ();
-	my $sql = $dbh->prepare("select name, color, description from mydb.myitems");
+	my $sql = $dbh->prepare("select name, color, description, someboolindicator from mydb.myitems");
 	$sql->execute();
 	while (my @rowAsArr = $sql->fetchrow_array())
 	{
 		my $name = @rowAsArr[0];
 		my $color = @rowAsArr[1];
-		my $details = @rowAsArr[2]; 
-		$myRoomItems{$name} = {color => $color, details => $details};
+		my $details = @rowAsArr[2];
+		my $SBoolInd = @rowAsArr[3]; 
+		$myRoomItems{$name} = {"Color" => $color, "Details" => $details, "Some bool indicator"=>$SBoolInd};
 	};
 	$sql->finish();
 
 };
 
-1;
+
