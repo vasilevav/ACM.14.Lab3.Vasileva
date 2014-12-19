@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
@@ -12,6 +11,7 @@ use lab3::st12::st12;
 use lab3::st13::st13;
 use lab3::st14::st14;
 use lab3::st16::st16;
+use lab3::st17::st17;
 use lab3::st21::st21;
 use lab3::st22::st22;
 my @MODULES = 
@@ -24,6 +24,7 @@ my @MODULES =
 	\&ST13::st13,
 	\&ST14::st14,
 	\&ST16::st16,
+	\&ST17::st17,
 	\&ST21::st21,
 	\&ST22::st22,
 );
@@ -38,6 +39,7 @@ my @NAMES =
 	"13 Mansurov",
 	"14 Melnikov",
 	"Samokhin",
+	"17. Tikhonov R.",
 	"21 Shilenkov",
 	"22 Shishkina",	
 );
