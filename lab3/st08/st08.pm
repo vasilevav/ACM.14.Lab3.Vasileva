@@ -3,7 +3,7 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use DBI;
-use DBD::mysql;
+#use DBD::mysql;
 
 my @humans=();
 

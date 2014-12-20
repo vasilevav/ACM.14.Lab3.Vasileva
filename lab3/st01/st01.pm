@@ -4,7 +4,7 @@ use warnings;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use DBI;
-use DBD::mysql;
+#use DBD::mysql;
 my $Myfile='lab2\st01\AbramovData';
 my @option_func=
 (

@@ -8,7 +8,7 @@ use lab3::st05::st05;
 use lab3::st08::st08;
 use lab3::st10::st10;
 use lab3::st12::st12;
-use lab3::st13::st13;
+#use lab3::st13::st13;	модуль-то где?
 use lab3::st14::st14;
 use lab3::st15::st15;
 use lab3::st16::st16;

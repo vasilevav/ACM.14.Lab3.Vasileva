@@ -3,7 +3,7 @@ package ST10;
 use strict;
 
 use DBI;
-use Text::Iconv;
+#use Text::Iconv;
 
 use constant API_KEY => '0add42399f47c5125b45b292b8efb2b4';
 
@@ -12,8 +12,8 @@ my $db_user_name = 'perl_lab';
 my $db_password = '1234';
 my $dbh;
 
-my $iconvTo = Text::Iconv->new('cp866', 'cp1251');
-my $iconvFrom = Text::Iconv->new('cp1251', 'cp866');
+my $iconvTo;# = Text::Iconv->new('cp866', 'cp1251');
+my $iconvFrom;# = Text::Iconv->new('cp1251', 'cp866');
 
 my @dbm_attributes = (
     'name',
