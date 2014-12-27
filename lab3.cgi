@@ -13,6 +13,7 @@ use lab3::st14::st14;
 use lab3::st15::st15;
 use lab3::st16::st16;
 use lab3::st17::st17;
+use lab3::st18::st18;
 use lab3::st19::st19;
 use lab3::st21::st21;
 use lab3::st22::st22;
@@ -28,6 +29,7 @@ my @MODULES =
 	\&ST15::st15,
 	\&ST16::st16,
 	\&ST17::st17,
+	\&ST18::st18,
 	\&ST19::st19,
 	\&ST21::st21,
 	\&ST22::st22,
@@ -45,6 +47,7 @@ my @NAMES =
 	"15 Pridachin",
 	"Samokhin",
 	"17. Tikhonov R.",
+	"18. Chaldina E",
 	"19 Cherepanov",
 	"21 Shilenkov",
 	"22 Shishkina",	
