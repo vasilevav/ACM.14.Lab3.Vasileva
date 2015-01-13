@@ -6,6 +6,7 @@ use CGI::Carp qw(fatalsToBrowser);
 use lab3::st01::st01;
 use lab3::st05::st05;
 use lab3::st08::st08;
+use lab3::st09::st09;
 use lab3::st10::st10;
 use lab3::st12::st12;
 #use lab3::st13::st13;	модуль-то где?
@@ -22,6 +23,7 @@ my @MODULES =
 	\&ST01::st01, 
 	\&ST05::st05,
 	\&ST08::st08,
+	\&ST09::st09,
 	\&ST10::st10,
 	\&ST12::st12,
 	\&ST13::st13,
@@ -40,6 +42,7 @@ my @NAMES =
 	"Abramov A.",
 	"05. Girgushkina",
 	"08 Kuznetsova",
+	"09 Kuzmin",
 	"10. Kuklianov",
 	"Kushnikov V.",  #12
 	"13 Mansurov",
