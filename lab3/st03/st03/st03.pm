@@ -1,4 +1,4 @@
-﻿package Lab3;
+﻿package ST03;
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
@@ -36,7 +36,7 @@ my $db_type = "mysql";
 
 
 
-sub main {
+sub st03 {
 	$q = shift;
 	my $title = 'Список книг';
 	my $change = $q->param("change_db_type");
@@ -414,4 +414,4 @@ sub remove {
 	normal();
 }
 
-1;
+return 1;
