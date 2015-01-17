@@ -24,12 +24,14 @@ my %oplist = (
 my $db_host = "localhost";				
 my $db_port = "3306";					
 my $db_user = "root";					
-my $db_pwd = "rootpwd";					
+my $db_pwd = "rootpwd";				
 my $db_name = "library_db";				
 my $db_table_name = "library_table";	
 my $dsn_test = "DBI:mysql:INFORMATION_SCHEMA;$db_host:$db_port";
+
 my $dsn_work = "DBI:mysql:$db_name;$db_host:$db_port";
 my $dbm_filename = "library_dbm_file";
+
 my $St;
 my $db_type = "mysql";
 
@@ -37,12 +39,11 @@ my $db_type = "mysql";
 
 
 sub st03 {
-	$q = shift;
+	#$q = shift;
 	my $title = 'Список книг';
 	my $change = $q->param("change_db_type");
 	if(defined $change)
 	{
-	
 		$db_type = $change;
 		my $cookie = $q->cookie(
 			-name  => 'db_type',
@@ -152,8 +153,10 @@ sub st03 {
 	print $q->end_table;
 	print $q->end_html;	
 }
+
 sub dbm_to_sql 
 {
+
 	my $dbh = connect_to_mysql();
 	my $query = "DROP TABLE $db_table_name";
 	my $sth = $dbh->prepare($query) or die "Не могу подготовить $query: $DBI::errstr";
@@ -173,7 +176,6 @@ sub dbm_to_sql
 	$sth->finish(); $dbh->disconnect();	
 	normal();
 }
-
 sub sql_to_dbm
 {	
 
@@ -194,15 +196,17 @@ sub sql_to_dbm
 	print "Записано в DBM файл: $size<br>";
 	normal();
 }
+
 sub connect_to_mysql
 {	
+
 	my $dbh = DBI->connect($dsn_test, $db_user, $db_pwd, { RaiseError => 0, PrintError => 1, mysql_enable_utf8 => 1 } 
 		) || die "Colud not connect to database: $DBI::errstr";
 	my $query = "CREATE DATABASE IF NOT EXISTS $db_name";
 	my $sth = $dbh->prepare($query) or die "Не могу подготовить $query: $DBI::errstr";
 	my $rv = $sth->execute or die "Не могу выполнить $DBI::errstr";
-
 	$sth->finish(); $dbh->disconnect();
+
 	my $dbh = DBI->connect($dsn_work, $db_user, $db_pwd, { RaiseError => 0, PrintError => 1, mysql_enable_utf8 => 1 } 
 		) || die "Colud not connect to database: $DBI::errstr";
 		#$dbh->do( 'SET NAMES cp1251' );
@@ -243,6 +247,7 @@ sub edit {
 		my $rv = $sth->execute($id) or die "Не могу выполнить $DBI::errstr";
 		
 		my ($author, $title, $year);
+		# Привязываем переменные к столбцам
 		$sth->bind_columns(\($author, $title, $year)) or die "Не могу привязать $DBI::errstr";
 		$rv = $sth->execute or die "Не могу выполнить $DBI::errstr";
 		$sth->fetch();	
@@ -288,13 +293,10 @@ sub edit {
 }
 
 sub confirm {
-
 	if($db_type eq "mysql")
 	{
 		my $id = $q->param('id');
-		
-		
-	    my $dbh = connect_to_mysql();	
+		my $dbh = connect_to_mysql();	
 		my $query =  "SELECT author, title, year FROM $db_table_name WHERE id = ?";
 		my $sth = $dbh->prepare($query) or die "Не могу подготовить $query: $DBI::errstr";
 		my $rv = $sth->execute($id) or die "Не могу выполнить $DBI::errstr";		
@@ -396,6 +398,7 @@ sub set {
 }
 
 sub remove {
+
 	if($db_type eq "mysql")
 	{
 		my $id = $q->param('id');
@@ -414,4 +417,4 @@ sub remove {
 	normal();
 }
 
-return 1;
+1;

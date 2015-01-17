@@ -2,6 +2,6 @@
 use 5.010;
 use strict;
 use warnings;
-	use Lab3;
+	use ST03;
 
-Lab3::main(new CGI);
+st03::st03();
